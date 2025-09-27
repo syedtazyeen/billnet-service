@@ -68,17 +68,25 @@ class UserManager(BaseUserManager):
     Custom user manager for the User model.
     """
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, identifier, password=None, **extra_fields):
         """
-        Create and return a regular user with the given email and password.
+        Create and return a regular user.
         """
-        if not email:
-            raise ValueError("The Email field must be set")
+        if not identifier:
+            raise ValueError("The Identifier field must be set")
 
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+        if "@" in identifier:
+            email = self.normalize_email(identifier)
+            phone = None
+        else:
+            email = None
+            phone = identifier
+
+        user = self.model(email=email, phone=phone, **extra_fields)
         if password:
             user.set_password(password)
+        else:
+            user.set_unusable_password()
         user.save(using=self._db)
         return user
 
@@ -91,7 +99,13 @@ class User(AbstractBaseUser):
     # Basic user fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=20, blank=True, null=True, unique=True, help_text="Phone number for OTP authentication")
+    phone = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        unique=True,
+        help_text="Phone number for OTP authentication",
+    )
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
 
@@ -154,6 +168,10 @@ class User(AbstractBaseUser):
         """Return the first_name plus the last_name, with a space in between."""
         full_name = f"{self.first_name} {self.last_name}"
         return full_name.strip()
+
+    def is_active(self):
+        """Check if user is active."""
+        return self.status == UserStatus.ACTIVE
 
     @property
     def is_admin(self):

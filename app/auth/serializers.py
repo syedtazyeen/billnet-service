@@ -138,10 +138,19 @@ class VerifyOTPSerializer(serializers.Serializer):
     Serializer for verifying OTP.
     """
 
+    identifier = serializers.CharField(
+        max_length=255, help_text="Email or phone number"
+    )
     request_id = serializers.CharField(
         max_length=255, help_text="Request ID from send OTP response"
     )
     otp = serializers.CharField(max_length=10, help_text="OTP code")
+
+    def validate_identifier(self, value):
+        """Validate if the identifier is a valid email or phone number."""
+        if not OTPService.is_valid_identifier(value):
+            raise serializers.ValidationError("Invalid email or phone number format.")
+        return value
 
     def validate_otp(self, value):
         """Validate if the OTP is a valid number."""

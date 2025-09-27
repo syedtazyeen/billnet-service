@@ -21,17 +21,19 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
 
     if response is not None:
         # For ValidationError with serializer.errors
-        if hasattr(exc, 'detail') and isinstance(exc.detail, dict):
+        if hasattr(exc, "detail") and isinstance(exc.detail, dict):
             response.data = {
-                "code": getattr(exc, 'code', response.status_code),
+                "code": getattr(exc, "code", response.status_code),
                 "detail": exc.detail,
             }
         else:
             # Normalize other exceptions
-            detail: Union[str, Any] = response.data.get("detail", str(exc))
+            detail: Union[str, Any] = getattr(
+                exc, "detail", "An unexpected error occurred."
+            )
             response.data = {
-                "code": getattr(exc, 'code', response.status_code),
-                "detail": str(detail) if not isinstance(detail, str) else detail,
+                "code": getattr(exc, "code", response.status_code),
+                "detail": detail,
             }
         return response
 
@@ -40,7 +42,7 @@ def custom_exception_handler(exc: Exception, context: dict[str, Any]) -> Respons
     return Response(
         {
             "code": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "detail": str(detail) if not isinstance(detail, str) else detail,
+            "detail": detail,
         },
         status=status.HTTP_500_INTERNAL_SERVER_ERROR,
     )

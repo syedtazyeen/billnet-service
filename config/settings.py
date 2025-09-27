@@ -164,7 +164,6 @@ CACHES = {
 # OTP Configuration
 OTP_LENGTH = 6
 OTP_EXPIRY_MINUTES = 15
-OTP_MAX_ATTEMPTS = 3
 
 # Email Configuration
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
