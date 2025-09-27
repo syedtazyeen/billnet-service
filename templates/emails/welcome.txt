@@ -1,0 +1,24 @@
+Welcome to {{ app_name }}!
+
+Hi {{ user_name }},
+
+Welcome to {{ app_name }}! We're thrilled to have you join our community.
+
+Your account is now active and ready to use!
+Email: {{ user_email }}
+
+Here's what you can do next:
+- Complete your profile setup
+- Explore our features and services
+- Connect with other users
+- Get started with your first project
+
+If you have any questions or need assistance, don't hesitate to reach out to our support team.
+
+Best regards,
+The {{ app_name }} Team
+
+---
+This email was sent to {{ user_email }}
+If you have any questions, contact us at {{ support_email }}
+© 2024 {{ app_name }}. All rights reserved.
