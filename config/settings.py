@@ -131,7 +131,7 @@ REST_FRAMEWORK = {
 
 # drf-spectacular settings
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Ticknet API",
+    "TITLE": "billnet API",
     "DESCRIPTION": "A comprehensive ticketing system API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
@@ -178,7 +178,7 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=30, cast=int)
 
 # Email Service Configuration
-APP_NAME = config("APP_NAME", default="ticknet")
+APP_NAME = config("APP_NAME", default="billnet")
 SUPPORT_EMAIL = config("SUPPORT_EMAIL", default=DEFAULT_FROM_EMAIL)
 
 # Simple logging configuration

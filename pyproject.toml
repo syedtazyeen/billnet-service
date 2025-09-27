@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "ticknet-service"
+name = "billnet-service"
 version = "0.1.0"
 description = "A comprehensive event management system API"
 authors = ["Syed Tazyeen <themesyed@gmail.com>"]
