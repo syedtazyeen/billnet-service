@@ -3,7 +3,7 @@ Authentication views for JWT token management.
 """
 
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -71,7 +71,12 @@ class AuthViewSet(viewsets.GenericViewSet):
             status=status.HTTP_200_OK,
         )
 
-    @action(detail=False, methods=["post"], url_path="logout")
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="logout",
+        permission_classes=[IsAuthenticated],
+    )
     def logout(self, request):
         """
         Logout user by blacklisting the refresh token.
@@ -83,7 +88,12 @@ class AuthViewSet(viewsets.GenericViewSet):
             {"message": "Logged out successfully"}, status=status.HTTP_200_OK
         )
 
-    @action(detail=False, methods=["post"], url_path="refresh")
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="refresh",
+        permission_classes=[IsAuthenticated],
+    )
     def refresh_token(self, request):
         """
         Refresh access token using refresh token.
