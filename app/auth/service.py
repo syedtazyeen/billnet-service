@@ -7,6 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework.exceptions import ValidationError
 from app.core.otp_service import OTPService
+from app.workspaces.models import Workspace
 
 User = get_user_model()
 
@@ -36,6 +37,13 @@ class AuthService:
         user, is_new_user = self._find_or_create_user(identifier)
         if not user:
             raise ValidationError("Failed to create user")
+
+        # Create workspace
+        if is_new_user:
+            Workspace.objects.create(
+                name=f"{user.first_name}'s Workspace",
+                created_by=user,
+            )
 
         # Generate JWT tokens
         token_result = self._generate_jwt_tokens(user)
@@ -97,10 +105,7 @@ class AuthService:
         if not user:
             is_new_user = True
             try:
-                if "@" in identifier:
-                    user = User.objects.create_user(email=identifier)
-                else:
-                    user = User.objects.create_user(phone=identifier)
+                user = User.objects.create_user(identifier=identifier)
             except (ValueError, TypeError) as exc:
                 raise exc
 
