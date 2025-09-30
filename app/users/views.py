@@ -56,11 +56,6 @@ class UserViewSet(viewsets.GenericViewSet):
         queryset = querysets.get(self.request.user.role, User.objects.all())
         return queryset
 
-    @action(detail=False, methods=["get"], url_path="workspaces")
-    def get_workspaces(self):
-        """Get workspaces for current user."""
-        return Response(self.request.user.workspaces.all())
-
     @action(detail=False, methods=["get"], url_path="me")
     def profile(self, request):
         """Get current user's profile."""

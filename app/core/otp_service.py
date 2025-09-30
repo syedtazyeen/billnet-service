@@ -5,6 +5,8 @@ OTP service for generating, storing, sending, and validating OTPs.
 import uuid
 import secrets
 import re
+import threading
+import logging
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from django.core.cache import cache
@@ -12,6 +14,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from app.core.email_service import EmailService
 
+logger = logging.getLogger(__name__)
 
 class OTPService:
     """
@@ -123,6 +126,15 @@ class OTPService:
 
         otp = OTPService.generate_otp()
         OTPService.store_otp(request_id, identifier, otp)
-        OTPService.send_otp(identifier, otp, request_id)
+
+        # Send OTP in background thread
+        def send_otp_async():
+            try:
+                OTPService.send_otp(identifier, otp, request_id)
+            except Exception as e:
+                logger.error("Failed to send OTP to %s: %s", identifier, e)
+
+        thread = threading.Thread(target=send_otp_async, daemon=True)
+        thread.start()
 
         return {"request_id": request_id}

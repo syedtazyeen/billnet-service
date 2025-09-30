@@ -40,6 +40,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "core.middlewares.exception_middleware.ExceptionMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -126,7 +127,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
-    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
+    # "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
 }
 
 # drf-spectacular settings
