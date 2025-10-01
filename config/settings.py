@@ -15,6 +15,10 @@ SECRET_KEY = config("SECRET_KEY", default="secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production
 DEBUG = config("DEBUG", default=False, cast=bool)
+LOG_LEVEL = config("LOG_LEVEL", default="info", cast=str)
+
+# Current API version
+CURRENT_API_VERSION = "v1"
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
@@ -31,7 +35,9 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_spectacular",
     "corsheaders",
-    "app",
+    # Apps
+    "apps.users",
+    "apps.auth",
 ]
 
 MIDDLEWARE = [
@@ -40,7 +46,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "core.middlewares.exception_middleware.ExceptionMiddleware",
+    "config.middlewares.api_middleware.APIMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -89,7 +95,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom User Model
-AUTH_USER_MODEL = "app.User"
+# AUTH_USER_MODEL = "app.User"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),
@@ -121,23 +127,24 @@ SIMPLE_JWT = {
 # Django REST Framework settings
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_PAGINATION_CLASS": "core.pagination.CustomPageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "config.pagination.CustomPageNumberPagination",
     "PAGE_SIZE": 20,
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
-    # "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
 }
 
 # drf-spectacular settings
 SPECTACULAR_SETTINGS = {
-    "TITLE": "billnet API",
-    "DESCRIPTION": "A comprehensive ticketing system API",
+    "TITLE": "Billnet API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "COMPONENT_SPLIT_REQUEST": True,
-    "SCHEMA_PATH_PREFIX": "/api/",
+    "SCHEMA_PATH_PREFIX": f"/api/{CURRENT_API_VERSION}/",
+    "SCHEMA_PATH_PREFIX_TRIM": True,
+    "SERVERS": [{"url": f"/api/{version}", "description": f"API {version.upper()}"} for version in ["v1"]],
+    "SORT_OPERATIONS": False,
 }
 
 # CORS settings
@@ -179,7 +186,7 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=30, cast=int)
 
 # Email Service Configuration
 APP_NAME = config("APP_NAME", default="billnet")
-SUPPORT_EMAIL = config("SUPPORT_EMAIL", default=DEFAULT_FROM_EMAIL)
+# SUPPORT_EMAIL = config("SUPPORT_EMAIL", default=DEFAULT_FROM_EMAIL)
 
 # Simple logging configuration
 LOGGING = {

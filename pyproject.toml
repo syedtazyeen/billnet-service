@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "A comprehensive event management system API"
 authors = ["Syed Tazyeen <themesyed@gmail.com>"]
 readme = "README.md"
-packages = [{include = "app"}, {include = "config"}]
+packages = [{include = "apps"}, {include = "config"}, {include = "core"}]
 
 [tool.poetry.dependencies]
 python = "^3.11.0"
@@ -32,13 +32,13 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-line-length = 88
+line-length = 140
 target-version = ['py311']
 
 [tool.isort]
 profile = "black"
 multi_line_output = 3
-line_length = 88
+line_length = 140
 
 [tool.poetry.scripts]
 start = "run:main"
