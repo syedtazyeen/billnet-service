@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     # Apps
     "apps.users",
     "apps.auth",
+    "apps.workspaces",
 ]
 
 MIDDLEWARE = [
@@ -95,7 +96,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom User Model
-# AUTH_USER_MODEL = "app.User"
+AUTH_USER_MODEL = "users.User"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=24),

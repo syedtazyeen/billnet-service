@@ -10,6 +10,7 @@ API_VERSIONS = {
     "v1": [
         path("users/", include("apps.users.api.v1.urls")),
         path("auth/", include("apps.auth.api.v1.urls")),
+        path("workspaces/", include("apps.workspaces.api.v1.urls")),
     ],
 }
 

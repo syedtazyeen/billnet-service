@@ -5,9 +5,11 @@ Service for managing authentication.
 import logging
 from dataclasses import dataclass
 from typing import Optional
+from django.db import transaction
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework.exceptions import ValidationError
 from apps.core.services.otp import OTPService
+from apps.workspaces.models.workspace import Workspace
 from apps.users.models import User
 
 
@@ -51,6 +53,7 @@ class AuthService:
         except (AttributeError, TypeError) as exc:
             raise exc
 
+    @transaction.atomic()
     def _find_or_create_user(self, identifier):
         """
         Find existing user or create new user based on identifier.
@@ -74,7 +77,8 @@ class AuthService:
         if not user:
             is_new_user = True
             try:
-                user = User.objects.create_user(identifier=identifier)
+                user = User.objects.create(identifier=identifier)
+                Workspace.objects.create(name="Default Workspace", created_by=user)
             except (ValueError, TypeError) as exc:
                 raise exc
 
