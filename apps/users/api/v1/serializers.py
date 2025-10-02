@@ -67,7 +67,9 @@ def validate_social_links(value: Dict[str, Any]) -> Dict[str, Any]:
                 f"Invalid platform '{platform}'. Valid platforms are: {', '.join(valid_platforms)}"
             )
         if not isinstance(username, str) or not username.strip():
-            raise serializers.ValidationError(f"Invalid username for {platform}. Must be a non-empty string.")
+            raise serializers.ValidationError(
+                f"Invalid username for {platform}. Must be a non-empty string."
+            )
         if platform == "website" and not username.startswith(("http://", "https://")):
             raise serializers.ValidationError("Website must be a valid HTTP/HTTPS URL.")
     return value
@@ -83,10 +85,14 @@ def validate_preferences(value: Dict[str, Any]) -> Dict[str, Any]:
     valid_languages = {"en", "es", "fr", "de", "it", "pt", "ru", "zh", "ja", "ko", "ar", "hi"}
 
     if "theme" in value and value["theme"] not in valid_themes:
-        raise serializers.ValidationError(f"Invalid theme. Valid themes are: {', '.join(valid_themes)}")
+        raise serializers.ValidationError(
+            f"Invalid theme. Valid themes are: {', '.join(valid_themes)}"
+        )
 
     if "language" in value and value["language"] not in valid_languages:
-        raise serializers.ValidationError(f"Invalid language. Valid languages are: {', '.join(valid_languages)}")
+        raise serializers.ValidationError(
+            f"Invalid language. Valid languages are: {', '.join(valid_languages)}"
+        )
 
     notification_keys = {
         "email_notifications",
@@ -104,8 +110,12 @@ def validate_preferences(value: Dict[str, Any]) -> Dict[str, Any]:
 class UserSerializer(BaseUserSerializer):
     """Serializer for User model with validations for social_links & preferences."""
 
-    social_links = serializers.DictField(required=False, allow_null=True, validators=[validate_social_links])
-    preferences = serializers.DictField(required=False, allow_null=True, validators=[validate_preferences])
+    social_links = serializers.DictField(
+        required=False, allow_null=True, validators=[validate_social_links]
+    )
+    preferences = serializers.DictField(
+        required=False, allow_null=True, validators=[validate_preferences]
+    )
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -149,8 +159,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(BaseUserSerializer):
     """Serializer for updating user information (partial update allowed)."""
 
-    social_links = serializers.DictField(required=False, allow_null=True, validators=[validate_social_links])
-    preferences = serializers.DictField(required=False, allow_null=True, validators=[validate_preferences])
+    social_links = serializers.DictField(
+        required=False, allow_null=True, validators=[validate_social_links]
+    )
+    preferences = serializers.DictField(
+        required=False, allow_null=True, validators=[validate_preferences]
+    )
 
     class Meta(BaseUserSerializer.Meta):
         """Meta class for UserUpdateSerializer."""
@@ -187,3 +201,14 @@ class UserProfileSerializer(BaseUserSerializer):
             "role",
             "status",
         ]
+
+
+class UserSimpleSerializer(serializers.ModelSerializer):
+    """Serializer for user information."""
+
+    class Meta:
+        """Meta class for UserSimpleSerializer."""
+
+        model = User
+        fields = ["id", "email", "phone", "first_name", "last_name"]
+        read_only_fields = ["id"]

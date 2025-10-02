@@ -16,7 +16,7 @@ def get_apps_in_directory():
             if os.path.isdir(item_path):
                 apps_py_path = os.path.join(item_path, "apps.py")
                 if os.path.exists(apps_py_path):
-                    if item == "auth":
+                    if item == "auth" :
                         continue
                     app_names.append(item)
 

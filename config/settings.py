@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "apps.users",
     "apps.auth",
     "apps.workspaces",
+    "apps.invoices",
 ]
 
 MIDDLEWARE = [
@@ -47,7 +48,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "config.middlewares.api_middleware.APIMiddleware",
+    "config.middlewares.api.APIMiddleware",
+    "config.middlewares.workspace.WorkspaceMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"

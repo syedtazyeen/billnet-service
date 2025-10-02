@@ -3,6 +3,6 @@ Workspaces models package
 """
 
 from .workspace import Workspace
-from .members import WorkspaceMember, WorkspaceMemberRole
+from .roles import WorkspaceRole, WorkspaceRoleType
 
-__all__ = ["Workspace", "WorkspaceMember", "WorkspaceMemberRole"]
+__all__ = ["Workspace", "WorkspaceRole", "WorkspaceRoleType"]

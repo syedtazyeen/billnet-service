@@ -4,7 +4,7 @@ Workspace models
 
 import uuid
 from django.db import models, transaction
-from apps.workspaces.models.members import WorkspaceMember, WorkspaceMemberRole
+from apps.workspaces.models.roles import WorkspaceRole, WorkspaceRoleType
 
 
 class WorkspaceManager(models.Manager):
@@ -20,27 +20,27 @@ class WorkspaceManager(models.Manager):
             workspace = self.model(name=name, description=description)
             workspace.save()
 
-            workspace_member = WorkspaceMember.objects.create(
-                workspace=workspace,
+            workspace_member = WorkspaceRole.objects.create(
                 user=created_by,
-                role=WorkspaceMemberRole.OWNER,
+                workspace=workspace,
+                role_type=WorkspaceRoleType.OWNER,
             )
 
             return workspace, workspace_member
 
-    def add_user(self, workspace, user, role):
+    def add_user(self, workspace, user, role_type):
         """
         Add a user to a workspace with a role.
         """
 
-        return WorkspaceMember.objects.create(workspace=workspace, user=user, role=role)
+        return WorkspaceRole.objects.create(user=user, workspace=workspace, role_type=role_type)
 
     def get_user_workspaces(self, user):
         """
         Get all workspaces for a user.
         """
-        workspace_members = WorkspaceMember.objects.filter(user=user)
-        workspace_ids = workspace_members.values_list("workspace_id", flat=True)
+        workspace_roles = WorkspaceRole.objects.filter(user=user)
+        workspace_ids = workspace_roles.values_list("workspace_id", flat=True)
         return self.model.objects.filter(id__in=workspace_ids)
 
     def get_workspace_users(self, workspace):
@@ -48,7 +48,7 @@ class WorkspaceManager(models.Manager):
         Get all users for a workspace.
         """
 
-        return WorkspaceMember.objects.filter(workspace=workspace)
+        return WorkspaceRole.objects.filter(workspace=workspace)
 
 
 class Workspace(models.Model):
