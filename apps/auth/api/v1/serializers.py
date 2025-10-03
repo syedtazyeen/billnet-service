@@ -37,4 +37,12 @@ class VerifyCodeSerializer(IdentifierSerializer):
     code = serializers.CharField(required=True)
 
 
-__all__ = ["SendCodeSerializer", "VerifyCodeSerializer"]
+class RefreshTokenSerializer(serializers.Serializer):
+    """
+    Serializer for refresh token.
+    """
+
+    refresh = serializers.CharField(required=True)
+
+
+__all__ = ["SendCodeSerializer", "VerifyCodeSerializer", "RefreshTokenSerializer"]

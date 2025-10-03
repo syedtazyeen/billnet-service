@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.auth",
     "apps.workspaces",
     "apps.invoices",
+    "apps.agents",
 ]
 
 MIDDLEWARE = [

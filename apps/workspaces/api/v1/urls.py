@@ -10,6 +10,7 @@ router.register("", UserWorkspaceViewSet, basename="user-workspace")
 urlpatterns = [
     *router.urls,
     path("<uuid:workspace_id>/invoices/", include("apps.invoices.api.v1.urls")),
+    path("<uuid:workspace_id>/agent-conversations/", include("apps.agents.api.v1.urls")),
 ]
 
 

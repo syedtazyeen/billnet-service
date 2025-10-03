@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from drf_spectacular.utils import extend_schema
-from apps.auth.api.v1.serializers import SendCodeSerializer, VerifyCodeSerializer
+from apps.auth.api.v1.serializers import SendCodeSerializer, VerifyCodeSerializer, RefreshTokenSerializer
 from apps.auth.service import AuthService
 from apps.core.services.otp import OTPService
 from apps.core.services.email import EmailService
@@ -60,3 +60,15 @@ class AuthViewSet(viewsets.GenericViewSet):
             },
             status=status.HTTP_200_OK,
         )
+
+    @action(detail=False, methods=["post"], url_path="refresh")
+    def refresh_token(self, request):
+        """
+        Refresh access token using refresh token.
+        """
+        serializer = RefreshTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = self.auth_service.refresh_token(serializer.validated_data["refresh"])
+
+        return Response({"access": result}, status=status.HTTP_200_OK)
